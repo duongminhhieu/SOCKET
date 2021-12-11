@@ -4,7 +4,26 @@ import threading
 import tkinter as tk
 import time
 import os
-from Constants import ICON
+from PIL import ImageTk, Image
+from Constants import *
+
+
+"""Lấy ảnh của chương trình"""
+class AddImage:
+    def __init__(self):
+        return
+    
+    def get(name):
+        if name in IMG_LIST:
+            if IMG_LIST[name][1] is None:
+                
+                IMG_LIST[name][1] = ImageTk.PhotoImage(file=IMG_LIST[name][0])
+                return IMG_LIST[name][1]
+            else:
+                return IMG_LIST[name][1]
+        return None
+
+
 
 """Hàm căn giữa màn hình"""
 def center(master,app_width,app_height):
@@ -19,16 +38,17 @@ def center(master,app_width,app_height):
 """Thanh tiến trình"""
 class LoadingScreen():
     def __init__(self,master,*args,**kwargs):
-        if "time_live" in kwargs:
-            self.time_live = kwargs.get("time_live")
+        if "time_line" in kwargs:
+            self.time_line = kwargs.get("time_line")
         else:
-            self.time_live = 5
+            self.time_line = 5
         self.root = tk.Toplevel(master)
         self.master = master
         self.master.withdraw()
         self.app_width = 350
         self.app_height = 80
         self.root.resizable(False, False)
+        
         """Căn thanh loading giữa màn hình"""
         center(self.root,self.app_width,self.app_height)
         self.root.wm_attributes("-transparentcolor",self.root["bg"])
@@ -36,7 +56,7 @@ class LoadingScreen():
         
         self.frame = tk.Frame(self.root,width = 200,height = 28)
         self.frame.place(x = 100,y = 35 )
-        tk.Label(self.frame,text= "Server đang shut down...",fg = "#3a7ff6",font= "Bahnschrift 13").place(x = 0,y=0)
+        tk.Label(self.frame,text= "Shutting down...",fg = "#528B8B",font= "Helvetica").place(x = 0,y=0)
         for i in range(16):
             tk.Label(self.root,bg ="#000",width = 2, height = 1).place(x =(i)*22,y = 10)
 
@@ -47,17 +67,17 @@ class LoadingScreen():
         self.root.after(20, self.check_thread)
   
     def play_animation(self): 
-        for i in range(self.time_live):
-            if i != self.time_live - 1:   
+        for i in range(self.time_line):
+            if i != self.time_line - 1:   
                 for j in range(16):
-                    tk.Label(self.root,bg ="#3a7ff6",width = 2, height = 1).place(x =(j)*22,y = 10)
-                    time.sleep(0.06)
-                    self.root.update_idletasks()
+                    tk.Label(self.root,bg ="#F7E815",width = 2, height = 1).place(x =(j)*22,y = 10)
+                    time.sleep(0.02)
+                    self.root.update_idletasks() # update lại thanh
                     tk.Label(self.root,bg ="#000",width = 2, height = 1).place(x =(j)*22,y = 10)
             else:
                 for j in range(16):
-                    tk.Label(self.root,bg ="#3a7ff6",width = 2, height = 1).place(x =(j)*22,y = 10)
-                    time.sleep(0.06)
+                    tk.Label(self.root,bg ="#F7E815",width = 2, height = 1).place(x =(j)*22,y = 10)
+                    time.sleep(0.02)
                     self.root.update_idletasks()
                 
     def check_thread(self):
@@ -71,11 +91,14 @@ class LoadingScreen():
         self.master.destroy()
         os._exit(1)
 
-"""Trang chính của chương trình"""                        
+
+
+"""Trang chính của chương trình"""    
+
 class MainPage:
     def __init__(self,master):
         self.root = master
-        self.root.title("SERVER")
+        self.root.title("HOSTING SERVER")
         self.root.iconbitmap(f"{ICON}")
         self.disconnect_flag = False
         
@@ -93,9 +116,11 @@ class MainPage:
         self.status_list.pack()
 
         self.messages_frame.pack()
-
+       
         self.quit_but = tk.Button(self.root,text = "Quit",width = 30,command = self.on_closing)
-        self.quit_but.pack(pady = (10,10))
+        #img = AddImage.get("BUTTON_QUIT")
+        #self.quit_but.config(image=img)
+        self.quit_but.pack()
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     """Set cờ khi server muốn dừng kết nối"""
@@ -114,5 +139,5 @@ class MainPage:
     def on_closing(self):
         self.set_disconnect_flag(True)  
         """Giao diện tắt server"""
-        self.loading = LoadingScreen(self.root,time_live = 5)
+        self.loading = LoadingScreen(self.root,time_line = 5)
   

@@ -1,4 +1,5 @@
 import socket
+from tkinter import Button, PhotoImage
 
 """1 số hàm số"""
 HEADER = 64
@@ -32,4 +33,9 @@ NOT_FOUND = "!NOT FOUND"
 DONE = "!DONE"
 ERROR = "!ERROR"
 
-ICON = 'Images\Server.ico'
+ICON = 'Images\Server_img.ico'
+
+IMG_LIST = {
+        "BUTTON_QUIT"       : [f"Images\Button_Quit.png",None],
+
+    }

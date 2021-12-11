@@ -77,6 +77,7 @@ class Tk(tk.Tk):
         self.bind('<ButtonPress-1>',lambda event : root.unbind('<B1-Motion>'))
         self.bind('<ButtonRelease-1>',lambda event : Tk.move_window(root))
     
+    
     """Hàm xoá thanh title của chương trình"""
     def set_appwindow(self):
         """Nguồn: https://stackoverflow.com/questions/63217105/tkinter-overridedirect-minimizing-and-windows-task-bar-issues"""
@@ -116,7 +117,7 @@ class LoadingScreen():
         if "text" in kwargs:
             self.text = kwargs.get("text")
         else:
-            self.text = "Đang shut down..."
+            self.text = "Shutting down ..."
             
         self.root = tk.Toplevel(master)
         self.master = master
@@ -131,7 +132,7 @@ class LoadingScreen():
         
         self.frame = tk.Frame(self.root,width = 1000,height = 28)
         self.frame.place(x = self.info_x,y = self.info_y )
-        self.Info_label = tk.Label(self.frame,text= self.text,fg = "#3a7ff6",font= "Bahnschrift 13")
+        self.Info_label = tk.Label(self.frame,text= self.text,fg = "#ffe757",font= "Helvetica")
         self.Info_label.place(x = 0,y=0)
         self.list_label = []
         for i in range(16):
@@ -147,14 +148,14 @@ class LoadingScreen():
     def play_animation(self):
         while not self.stop_flag:
             for j in range(16):
-                self.list_label[j].config(bg = "#3a7ff6")
-                time.sleep(0.06)
+                self.list_label[j].config(bg = "#ffe757")
+                time.sleep(0.02)
                 self.root.update_idletasks()
                 self.list_label[j].config(bg = "#000")
 
         for j in range(16):
-            self.list_label[j].config(bg = "#3a7ff6")
-            time.sleep(0.06)
+            self.list_label[j].config(bg = "#ffe757")
+            time.sleep(0.02)
             self.root.update_idletasks()
                 
     def check_thread(self):
@@ -240,10 +241,8 @@ class QueryGoldForm:
         """Căn giữa chương trình"""
         JustifyApp.center(self.root, self.app_width, self.app_height)
         
-        """Background màu xanh của app"""
         self.canvas = tk.Canvas(
             self.root ,
-            bg = "#3a6ff7",
             height = 600,
             width = 900,
             bd = 0,
@@ -251,49 +250,25 @@ class QueryGoldForm:
             relief = "ridge")
         self.canvas.place(x = 0, y = 0)
 
-        self.canvas.create_rectangle(
-            50, 0, 50+800, 0+600,
-            fill = "#ffffff",
-            outline = "")
-        
-        self.canvas.create_rectangle(
-            393, 65, 393+115, 65+2,
-            fill = "#000000",
-            outline = "")
+        # Tao background
+        self.back_ground = self.canvas.create_image(450,300,image = AppImage.get("BACK_GROUND_QUERY"))
 
-        self.canvas.create_text(
-            450.0, 44.5,
-            text = "TRA CỨU GIÁ VÀNG",
-            fill = "#000000",
-            font = ("None", int(24.0)))
-
-        self.canvas.create_text(
-            136.0+15, 138.5,
-            text = "Nhập loại vàng:",
-            fill = "#000000",
-            font = ("None", int(18.0)))
-
-        self.canvas.create_text(
-            117.5+10, 212.5,
-            text = "Chọn ngày:",
-            fill = "#000000",
-            font = ("None", int(18.0)))
-        
+    
         """Ô nhập dữ liệu"""
         self.entry0_bg = self.canvas.create_image(
-            330.0+25, 138.5,
-            image = AppImage.get("TEXT_BOX_GOLD_IMG"))
+            388, 157,
+            image = AppImage.get("TEXT_BOX"))
 
         self.name = tk.Entry(
             bd = 0,
-            bg = "#e9e9e9",
+            bg = "#efefef",
             highlightthickness = 0,
             font=("",13))
         
         self.name.bind("<Return>",self.find_button_clicked)
         
         self.name.place(
-            x = 240.5+15, y = 116+10,
+            x = 270, y = 144,
             width = 179.0,
             height = 30)
         
@@ -305,16 +280,17 @@ class QueryGoldForm:
         self.cal = DateEntry(
                         takefocus = 0,
                         width=12,
-                        background='darkblue',
+                        background='orange',
                         foreground='white',
                         borderwidth=0,
                         showweeknumbers= False,
                         date_pattern= "dd/mm/yyyy",
                         maxdate= datetime.now(),
+                        selectbackground = 'orange'
                         )
         
         self.cal.place(
-                x = 117.5+80, y = 200,
+                x = 750, y = 140,
                 width = 100,
                 height = 30)
         
@@ -322,30 +298,32 @@ class QueryGoldForm:
         self.delete_button = tk.Button(
             image = AppImage.get("DELETE_BUTTON"),
             borderwidth = 0,
+            bg = "#efefef",
             highlightthickness = 0,
             command = self.delete_button_clicked,
             relief = "flat")
 
         self.delete_button.place(
-            x = 429, y = 117,
+            x = 455, y = 143,
             width = 24,
-            height = 45)
+            height = 30)
 
         """Nút để tìm kiếm"""
         self.search_button = tk.Button(
             image = AppImage.get("SEARCH_BUTTON_IMG"),
             borderwidth = 0,
+            bg = "#efefef",
             highlightthickness = 0,
             command = self.find_button_clicked,
             relief = "flat")
 
         self.search_button.place(
-            x = 453, y = 117,
-            width = 35,
-            height = 45)
+            x = 483, y = 143,
+            width = 24,
+            height = 30)
         
         """Bảng kết quả"""
-        columns = ("Đơn vị: đồng/lượng","Giá mua","Giá bán")
+        columns = ("Loại vàng","Giá mua","Giá bán")
         self.my_tree = ttk.Treeview(self.root,columns=columns,style='MyStyle.Treeview',show='headings')
        
         self.style = ttk.Style()
@@ -354,43 +332,46 @@ class QueryGoldForm:
         """Chỉnh sửa màu cho bảng"""
         self.style.configure("MyStyle.Treeview.Heading",
                              borderwidth=0,
-                             foreground= 'black',
-                             background='white',
+                             highlightthickness = 0,
+                             foreground= 'orange',
+                             background='lightyellow',
                              fieldbackground = "white",
-                             font = ("",18))
+                             font = ('Calibri', 18,'bold'))
         self.style.configure("MyStyle.Treeview",
                         background='#E9E9E9',
                         foreground= 'black',
                         rowheight = 25, 
                         fieldbackground='white',
                         bordercolor = 'white',
-                        borderwidth=0,
-                        )
-        
+                        borderwidth=0  ,
+                        highlightthickness = 0
+                        )   
+
+
         """Thay đổi màu khi người dùng chọn"""
-        self.style.map('MyStyle.Treeview',background = [('selected','#0E74EC')])
+        self.style.map('MyStyle.Treeview',background = [('selected','#fbae17')])
         
         """Định dạng cột"""
         self.my_tree.column("#0",width = 0, stretch =tk.NO)
-        self.my_tree.column("Đơn vị: đồng/lượng",anchor = tk.W,width = 140)
+        self.my_tree.column("Loại vàng",anchor = tk.W,width = 140)
         self.my_tree.column("Giá mua",anchor = tk.W,width = 80)
         self.my_tree.column("Giá bán",anchor = tk.W,width = 80)
         
         """Tạo heading của bảng"""
         self.my_tree.heading("#0",text = "",anchor = tk.W)
-        self.my_tree.heading("Đơn vị: đồng/lượng",text = "Đơn vị: đồng/lượng",anchor = tk.W)
+        self.my_tree.heading("Loại vàng",text = "Loại vàng",anchor = tk.W)
         self.my_tree.heading("Giá mua",text = "Giá mua",anchor = tk.W)
         self.my_tree.heading("Giá bán",text = "Giá bán",anchor = tk.W)
         
         """Chỉnh màu cho bảng"""
-        self.my_tree.tag_configure("evenrow", background  = "lightblue")
+        self.my_tree.tag_configure("evenrow", background  = "lightyellow")
         self.my_tree.tag_configure("oddrow", background  = "#fff")
         
         for col in columns:
             self.my_tree.heading(col, text=col, command= lambda _col=col : self.treeview_sort_column(_col, False))
             
         self.my_tree.place(
-            x =65 ,y = 250,
+            x = 65 ,y = 243.89,
             width = 770,
             height = 330
         )
@@ -406,9 +387,9 @@ class QueryGoldForm:
             relief = "flat")
 
         self.minimize_button.place(
-            x = 802 , y = 0,
-            width = 24,
-            height = 24)
+            x = 830 , y = 0,
+            width = 35,
+            height = 26)
         
         """Nút thoát"""
         self.exit_button = tk.Button(
@@ -419,13 +400,13 @@ class QueryGoldForm:
         relief = "flat")
 
         self.exit_button.place(
-            x = 826, y = 0,
-            width = 24,
-            height = 24)
+            x = 865, y = 0,
+            width = 35,
+            height = 26)
         
         """Ô gợi ý bên dưới ô người dùng nhập"""
         self.list_box = tk.Listbox(self.root,
-                                   bg = "white",
+                                   bg = "lightyellow",
                                    borderwidth=0, 
                                    highlightthickness=0,
                                    font=("Helvetica",10),
@@ -474,7 +455,7 @@ class QueryGoldForm:
             else:
                 return
         self.list_box.place(
-            x = 240.5+15, y = 116+50,
+            x = 240.5+25, y = 116+65,
         )
         
         """Hiện gợi ý"""             
@@ -492,7 +473,7 @@ class QueryGoldForm:
             self.list_box.insert(tk.END,item)
             self.list_box.config(width = 0,height = 0)
         
-        self.root.after(1000,self.toggle) 
+        self.root.after(10000,self.toggle) 
     
     """Các hàm hỗ trợ"""       
     def clear_table(self):
@@ -518,7 +499,7 @@ class QueryGoldForm:
         
         """Màu cho thanh tiến trình"""
         TROUGH_COLOR = 'white'
-        BAR_COLOR = '#3A6FF7'
+        BAR_COLOR = '#fbae17'
         
         """Khởi tạo 1 thanh tiến trình"""
         self.progress_bar = ttk.Progressbar(self.root,style="bar.Horizontal.TProgressbar",orient=tk.HORIZONTAL,length=300,mode = "indeterminate")
@@ -538,7 +519,7 @@ class QueryGoldForm:
         self.name.unbind("<Return>")
         self.my_tree.unbind("<Double-1>")
 
-        """Thanh tiến trình màu xanh"""
+        """Thanh tiến trình màu vàng"""
         self.progress_bar.place(x = 50,y = 250+330,
                     width = 760+40,height = 20)
         
@@ -618,9 +599,9 @@ class QueryGoldForm:
         
         fig, ax = plt.subplots()
         lines = []
-        l, = ax.plot(self.valid_date, self.buy, label="Mua")
+        l, = ax.plot(self.valid_date, self.buy, label="Giá Mua")
         lines.append(l)
-        l, = ax.plot(self.valid_date, self.sell, label="Bán") 
+        l, = ax.plot(self.valid_date, self.sell, label="Giá Bán") 
         lines.append(l)
         
         fmt = '{x:,.0f}k'
@@ -659,7 +640,7 @@ class QueryGoldForm:
         plt.subplots_adjust(right=0.8)
         plt.title(f"{self.chart_name}",pad= 20)
         plt.gcf().autofmt_xdate()
-        plt.grid(color = 'green', linestyle = '--', linewidth = 0.5)
+        plt.grid(color = 'orange', linestyle = '--', linewidth = 0.5)
         plt.legend(handles=lines,bbox_to_anchor=(1.05, 1), loc='upper left')
         plt.show()
     
@@ -703,8 +684,8 @@ class SignUpForm:
         self.client = app.client
         
         """Kích thước chương trình"""
-        self.app_width = 600
-        self.app_height = 300
+        self.app_width = 720
+        self.app_height = 480
         
         """Căn giữa màn hình"""
         JustifyApp.center(self.root,self.app_width,self.app_height)
@@ -712,32 +693,24 @@ class SignUpForm:
         self.canvas = tk.Canvas(
             self.root,
             bg = "#3a7ff6",
-            height = 300,
-            width = 600,
+            height = 480,
+            width = 720,
             bd = 0,
             highlightthickness = 0,
             relief = "ridge")
         self.canvas.place(x = 0, y = 0)
-
-        self.canvas.create_rectangle(
-            100, 0, 100+400, 0+300,
-            fill = "#ffffff",
-            outline = "")
-
-        self.canvas.create_text(
-            299.5, 25.5,
-            text = "ĐĂNG KÝ TÀI KHOẢN",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
+  
+    # Tao background
+        self.back_ground = self.canvas.create_image(360,240,image = AppImage.get("BACK_GROUND_CREATE_ACCOUNT"))
 
         self.entry0_bg = self.canvas.create_image(
-            299.5, 89.0,
+            490, 191,
             image = AppImage.get("TEXT_BOX"))
         
         """Ô nhập tài khoản"""
         self.username = tk.Entry(
             bd = 0,
-            bg = "#e9e9e9",
+            bg = "#efefef",
             highlightthickness = 0)
 
         self.username.delete(0,'end')
@@ -745,40 +718,40 @@ class SignUpForm:
         self.username.bind("<FocusIn>", lambda event : Tk.select_entry(self.username,self.root))
         
         self.username.place(
-            x = 191.0+2, y = 64+22,
-            width = 217.0,
+            x = 369, y = 178.5,
+            width = 235,
             height = 25)
 
         self.entry1_bg = self.canvas.create_image(
-            299.5, 150.0,
+            490, 272.5,
             image =  AppImage.get("TEXT_BOX"))
         
         """Ô nhập mật khẩu"""
         self.password = tk.Entry(
             bd = 0,
-            bg = "#e9e9e9",
+            bg = "#efefef",
             highlightthickness = 0,
             show = "*")
         
         self.password.place(
-            x = 191.0+2, y = 125+22,
-            width = 217.0,
+            x = 369, y = 262,
+            width = 235,
             height = 25)
 
         self.entry2_bg = self.canvas.create_image(
-            299.5, 211.0,
+            490, 350,
             image =  AppImage.get("TEXT_BOX"))
 
         """Ô nhập lại mật khẩu"""
         self.re_enter_password = tk.Entry(
             bd = 0,
-            bg = "#e9e9e9",
+            bg = "#efefef",
             highlightthickness = 0,
             show="*")
         
         self.re_enter_password.place(
-            x = 191.0+2, y = 186+22,
-            width = 217.0,
+            x = 369, y = 338,
+            width = 235,
             height = 25)
         
         self.password.delete(0,'end')
@@ -791,29 +764,7 @@ class SignUpForm:
         self.password.bind("<FocusIn>", lambda event :Tk.select_entry(self.password,self.root))
         self.re_enter_password.bind("<FocusIn>", lambda event :Tk.select_entry(self.re_enter_password,self.root))
         
-        self.canvas.create_text(
-            219.5+4, 78.5,
-            text = "Tài khoản",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
-
-        self.canvas.create_text(
-            219.5+5, 138.0,
-            text = "Mật khẩu",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
-
-        self.canvas.create_text(
-            242.0+15, 199.0,
-            text = "Xác nhận mật khẩu",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
-
-        self.canvas.create_rectangle(
-            264, 37, 264+72, 37+2,
-            fill = "#000000",
-            outline = "")
-
+ 
         self.sign_up = tk.Button(
             image = AppImage.get("SIGN_UP_IMG") ,
             borderwidth = 0,
@@ -822,9 +773,9 @@ class SignUpForm:
             relief = "flat")
 
         self.sign_up.place(
-            x = 248, y = 248,
-            width = 103,
-            height = 38)
+            x = 363, y = 394.69,
+            width = 194,
+            height = 76)
 
         """Con mắt hiện ẩn mật khẩu"""
         self.show = tk.Button(
@@ -836,9 +787,9 @@ class SignUpForm:
         self.show.bind("<Button-1>",(lambda event: self.show_and_hide_password(button = self.show,entry = (self.password,self.re_enter_password))))
         
         self.show.place(
-            x = 371, y = 186,
-            width = 47,
-            height = 50)
+            x = 576, y = 261,
+            width = 40,
+            height = 25)
         
         """Nút quay lại màn hình đăng nhập"""
         self.go_back = tk.Button(
@@ -849,9 +800,9 @@ class SignUpForm:
             relief = "flat")
         
         self.go_back.place(
-            x = 100 , y = 0,
-            width = 24,
-            height = 24
+            x = 10 , y = 10,
+            width = 61,
+            height = 37
         )
         
         """Nút thu nhỏ chương trình xuống thanh công cụ"""
@@ -863,9 +814,9 @@ class SignUpForm:
             relief = "flat")
 
         self.minimize_button.place(
-            x = 452 , y = 0,
-            width = 24,
-            height = 24
+            x = 650, y = 0,
+            width = 35,
+            height = 26
             )
         
         """Nút thoát chương trình"""
@@ -878,9 +829,9 @@ class SignUpForm:
             )
 
         self.exit_button.place(
-            x = 476, y = 0,
-            width = 24,
-            height = 24
+            x = 685, y = 0,
+            width = 35,
+            height = 26
             )
     
     """Hàm ẩn hiện mật khẩu"""
@@ -941,7 +892,7 @@ class SignUpForm:
         ask = messagebox.askyesno("Trạng thái","   Thoát ngay?   ",parent = self.root)
         if ask == 0:
             return
-        else:           
+        else:      
             threading.Thread(target = self.client.client_disconnect).start()
 
 """Form để đăng nhập"""       
@@ -956,47 +907,38 @@ class LoginForm:
         self.client = app.client
         
         """Kích thước chương trình"""
-        self.app_width = 600
-        self.app_height = 300
+        self.app_width = 720
+        self.app_height = 480
         
         """Căn giữa chương trình"""
         JustifyApp.center(self.root,self.app_width,self.app_height)
         
         self.canvas = tk.Canvas(
             self.root,
-            bg = "#3a7ff6",
-            height = 300,
-            width = 600,
+            height = 480,
+            width = 720,
             bd = 0,
             highlightthickness = 0,
             relief = "ridge")
         self.canvas.place(x = 0, y = 0)
 
-        self.canvas.create_rectangle(
-            100, 0, 100+400, 0+300,
-            fill = "#ffffff",
-            outline = "")
-
-        self.canvas.create_text(
-            298.5, 37.5,
-            text = "ĐĂNG NHẬP VÀO SERVER",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
+    # Tao background
+        self.back_ground = self.canvas.create_image(360,240,image = AppImage.get("BACK_GROUND_LOGIN"))
 
         self.entry0_bg = self.canvas.create_image(
-            298.5, 108.0,
+            493, 202,
             image = AppImage.get("TEXT_BOX")
             )
-
+    
         """Ô nhập tên tài khoản"""    
         self.username = tk.Entry(
             bd = 0,
-            bg = "#e9e9e9",
+            bg = "#efefef",
             highlightthickness = 0)
 
         self.username.place(
-            x = 190.0+2, y = 83+20,
-            width = 217.0,
+            x = 365.0+8, y = 190,
+            width = 139.0,
             height = 25)
         
         self.username.delete(0,'end')
@@ -1004,13 +946,13 @@ class LoginForm:
         self.username.bind("<FocusIn>", lambda event :Tk.select_entry(self.username,self.root))
 
         self.entry1_bg = self.canvas.create_image(
-            298.5, 186.0,
+            493, 287,
             image = AppImage.get("TEXT_BOX"))
 
         """Ô nhập mật khẩu"""
         self.password = tk.Entry(
             bd = 0,
-            bg = "#e9e9e9",
+            bg = "#efefef",
             highlightthickness = 0,
             show = "*")
 
@@ -1019,26 +961,10 @@ class LoginForm:
         self.password.bind("<FocusIn>", lambda event :Tk.select_entry(self.password,self.root))
         
         self.password.place(
-            x = 190.0+2, y = 161+21,
-            width = 217.0,
+            x = 365.0+8, y = 275,
+            width = 139,
             height = 25)
 
-        self.canvas.create_text(
-            218.5+5, 93.5+2,
-            text = "Tài khoản",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
-
-        self.canvas.create_text(
-            218.5+5, 174.0,
-            text = "Mật khẩu",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
-
-        self.canvas.create_rectangle(
-            264, 50, 264+72, 50+2,
-            fill = "#000000",
-            outline = "")
 
         """Nút đăng nhập"""
         self.login_button = tk.Button(
@@ -1049,9 +975,9 @@ class LoginForm:
             relief = "flat")
 
         self.login_button.place(
-            x = 246, y = 239,
-            width = 103,
-            height = 38)
+            x = 558, y = 355,
+            width = 149,
+            height = 75)
 
         """Nút ẩn hiện mật khẩu"""
         self.show = tk.Button(
@@ -1062,9 +988,9 @@ class LoginForm:
 
         self.show.bind("<Button-1>",(lambda event: self.show_and_hide_password(button = self.show,entry = (self.password,))))
         self.show.place(
-            x = 370, y = 161,
-            width = 47,
-            height = 50)
+            x = 576, y = 274,
+            width = 40,
+            height = 25)
 
         """Nút tạo tài khoản"""
         self.sign_up = tk.Button(
@@ -1075,36 +1001,39 @@ class LoginForm:
             relief = "flat")
 
         self.sign_up.place(
-            x = 339, y = 215,
-            width = 78,
-            height = 13)
+            x = 348, y = 352,
+            width = 195,
+            height = 75)
 
-        """Nút thu nhỏ chương trình"""
+ 
+        """Nút thu nhỏ màn hình chương trình"""
         self.minimize_button = tk.Button(
-            image =   AppImage.get("MINIMIZE_IMG"),
+            image =AppImage.get("MINIMIZE_IMG"),
             borderwidth = 0,
             highlightthickness = 0,
-            command = app.minimizeGUI,
+            command = self.app.minimizeGUI,
             relief = "flat")
 
         self.minimize_button.place(
-            x = 452 , y = 0,
-            width = 24,
-            height = 24)
+             x = 650, y = 0,
+            width = 35,
+            height = 26
+            )
         
         """Nút thoát chương trình"""
         self.exit_button = tk.Button(
-            image =   AppImage.get("EXIT_BUTTON_IMG"),
+            image = AppImage.get("EXIT_BUTTON_IMG"),
             borderwidth = 0,
             highlightthickness = 0,
             command = self.exit_button_clicked,
             relief = "flat")
 
         self.exit_button.place(
-            x = 476, y = 0,
-            width = 24,
-            height = 24)
-       
+             x = 685, y = 0,
+            width = 35,
+            height = 26
+            )
+        
     """Hàm ẩn hiện mật khẩu"""
     def show_and_hide_password(self,even = None,*args,**kwargs):
         for entry in kwargs["entry"]: 
@@ -1170,8 +1099,8 @@ class InputHostIp(tk.Frame):
         self.app = app
         self.root = app.root
         self.client = app.client
-        self.app_width = 600
-        self.app_height = 300
+        self.app_width = 720
+        self.app_height = 480
         
         """ICON của chương trình"""
         self.root.tk.call('wm', 'iconphoto', self.root._w, AppImage.get("CLIENT_ICON"))
@@ -1181,27 +1110,25 @@ class InputHostIp(tk.Frame):
     
         self.canvas = tk.Canvas(
             self.root ,
-            bg = "#3a7ff6",
-            height = 300,
-            width = 600,
+            height = 480,
+            width = 720,
             bd = 0,
             highlightthickness = 0,
             relief = "ridge")
         self.canvas.place(x = 0, y = 0)
 
-        self.canvas.create_rectangle(
-            300, 0, 300+300, 0+300,
-            fill = "#ffffff",
-            outline = "")
+        
+        # Tao background
+        self.back_ground = self.canvas.create_image(360,240,image = AppImage.get("BACK_GROUND"))
 
         self.entry0_bg = self.canvas.create_image(
-            449.5, 137.5,
+            570, 195,
             image = AppImage.get("HOST_INPUT"))
 
         """Ô nhập địa chỉ IP"""
         self.host_input_field = tk.Entry(
             bd = 0,
-            bg = "#dedede",
+            bg = "#efefef",
             highlightthickness = 0)
 
         self.host_input_field.insert(tk.END,"HOST IP")
@@ -1210,27 +1137,11 @@ class InputHostIp(tk.Frame):
         self.host_input_field.bind("<FocusIn>", lambda event :Tk.select_entry(self.host_input_field,self.root))
         
         self.host_input_field.place(
-            x = 380.0-3, y = 115+21,
+            x = 447, y = 184,
             width = 139.0,
             height = 25)
 
-        self.canvas.create_text(
-            384.5, 126.5,
-            text = "IP",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
-
-        self.canvas.create_text(
-            450.5, 50.0,
-            text = "NHẬP HOST IP",
-            fill = "#000000",
-            font = ("Roboto-Bold", int(12.0)))
-
-        self.canvas.create_rectangle(
-            428, 61, 428+44, 61+1,
-            fill = "#000000",
-            outline = "")
-
+    #Tao nut connect
         self.b0 = tk.Button(
             image = AppImage.get("CONNECT_IMG"),
             borderwidth = 0,
@@ -1239,60 +1150,10 @@ class InputHostIp(tk.Frame):
             relief = "flat")
 
         self.b0.place(
-            x = 410, y = 219,
-            width = 80,
-            height = 40)
+            x = 425, y = 250,
+            width = 167,
+            height = 75)
         
-        self.canvas.create_text(
-            140, 50.0,
-            text = "CHƯƠNG TRÌNH TRA CỨU",
-            fill = "#ffffff",
-            font = ("Roboto-Bold", int(15.0)))
-        
-        self.canvas.create_text(
-            33, 80,
-            text = "GIÁ",
-            fill = "#ffffff",
-            font = ("Roboto-Bold", int(15.0)))
-        
-        self.canvas.create_text(
-            85, 80,
-            text = "VÀNG",
-            fill = "#FAFF00",
-            font = ("Roboto-Bold", int(15.0)))
-        
-        self.label1 = tk.Label(image=AppImage.get("GOLD_IMG"))
-        self.label1.image = AppImage.get("GOLD_IMG")
-        
-        self.label1.place(
-            x=150, y=90, 
-            width= 100,
-            height=100
-            )
-        
-        self.canvas.create_text(
-            20, 190,
-            text = "Phát triển bởi:",
-            fill = "#ffffff",
-            font = ("Roboto-Bold", int(15.0)))
-        
-        self.canvas.create_text(
-            130, 220,
-            text = "20120473 - Dương Minh Hiếu",
-            fill = "#ffffff",
-            font = ("Roboto-Bold", int(15.0)))
-        
-        self.canvas.create_text(
-            140, 250,
-            text = "20120463 - Nguyễn Trung Hiếu",
-            fill = "#ffffff",
-            font = ("Roboto-Bold", int(15.0)))
-
-        self.canvas.create_text(
-            150, 280,
-            text = "20120463 - Nguyễn Hoàng Duy",
-            fill = "#ffffff",
-            font = ("Roboto-Bold", int(15.0)))
         
         """Nút thu nhỏ màn hình chương trình"""
         self.minimize_button = tk.Button(
@@ -1303,9 +1164,10 @@ class InputHostIp(tk.Frame):
             relief = "flat")
 
         self.minimize_button.place(
-            x = 552, y = 0,
-            width = 24,
-            height = 24)
+            x = 650, y = 0,
+            width = 35,
+            height = 26
+            )
         
         """Nút thoát chương trình"""
         self.exit_button = tk.Button(
@@ -1316,9 +1178,10 @@ class InputHostIp(tk.Frame):
             relief = "flat")
 
         self.exit_button.place(
-            x = 576, y = 0,
-            width = 24,
-            height = 24)
+            x = 685, y = 0,
+            width = 35,
+            height = 26
+            )
     
     """Hàm kiểm tra IPv4 của người dùng có hợp lệ không"""
     def check_IP_prefix(self):

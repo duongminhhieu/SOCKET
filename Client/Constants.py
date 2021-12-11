@@ -43,5 +43,9 @@ IMG_LIST = {
         "GOBACK_IMG"        : [f"{PATH_IMG}Goback_button.png",None],
         "EXIT_BUTTON_IMG"   : [f"{PATH_IMG}Exit_button.png", None],
         "CONNECT_IMG"       : [f"{PATH_IMG}Connect_Button.png", None],
-        "SIGN_IN_IMG"       : [f"{PATH_IMG}Login_Button.png", None]
+        "SIGN_IN_IMG"       : [f"{PATH_IMG}Login_Button.png", None],
+        "BACK_GROUND"       : [f"{PATH_IMG}Back_ground.png", None],
+        "BACK_GROUND_LOGIN" : [f"{PATH_IMG}Back_ground_login.png", None],
+        "BACK_GROUND_CREATE_ACCOUNT" : [f"{PATH_IMG}Back_ground_create_account.png", None],
+        "BACK_GROUND_QUERY" : [f"{PATH_IMG}Query_background.png", None]
     }

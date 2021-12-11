@@ -380,6 +380,7 @@ class ServerApplication():
         self.server.set_gui(self.main_page)
         self.server.start_server()
       
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = ServerApplication(root)
