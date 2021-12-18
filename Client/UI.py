@@ -188,10 +188,7 @@ class QueryGoldForm:
         
         """Đây là list gợi ý cho người dùng có thể tìm kiếm"""
         """Trích xuất từ server, nêu server trả về rỗng thì sẽ có 1 list tên mặc định"""
-        self.list_name = self.client.get_name_of_golds()
-        if self.list_name is None:
-            """Nếu không lấy được tên từ third party thì lấy tến cố định"""
-            self.list_name = [
+        self.list_name = [
                     "SJC Long Xuyên",	
                     "SJC HCM",	
                     "SJC Hà Nội",	
@@ -233,7 +230,6 @@ class QueryGoldForm:
                     "PNJ NT 10K",
                     "Mi Hồng 950"
                                 ]
-   
         """Các thông số và giao diện"""
         self.app_width = 900
         self.app_height = 600
