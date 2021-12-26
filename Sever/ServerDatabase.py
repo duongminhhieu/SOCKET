@@ -201,14 +201,12 @@ class ServerDatabase:
 
     """Lấy list tên vàng từ database"""
     def get_name_of_golds(date = datetime.now()):
-        try:
-            date = date.strftime("%#d/%#m/%Y")
-            with sqlite3.connect(GOLDS_DATABASE_PATH,check_same_thread = False) as conn:
-                cursor = conn.cursor()   
-                list_of_name = cursor.execute(f"SELECT NAME FROM '{date}' ORDER BY rowid").fetchall()
-                list_of_name = [name[0] for name in list_of_name]
-                return list_of_name 
-        except: 
-            return None
+        date = date.strftime("%#d/%#m/%Y")
+        with sqlite3.connect(GOLDS_DATABASE_PATH,check_same_thread = False) as conn:
+            cursor = conn.cursor()   
+            list_of_name = cursor.execute(f"SELECT NAME FROM '{date}' ORDER BY rowid").fetchall()
+            list_of_name = [name[0] for name in list_of_name]
+            return list_of_name 
+        
   
                
